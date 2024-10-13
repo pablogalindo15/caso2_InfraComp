@@ -7,9 +7,8 @@ public class App {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         int opcion;
-    
-        do {
 
+        do {
             System.out.println("");
             System.out.println("Menú de opciones:");
             System.out.println("1. Generar referencias");
@@ -18,8 +17,7 @@ public class App {
             System.out.print("Seleccione una opción: ");
             
             opcion = scanner.nextInt();
-            scanner.nextLine(); 
-
+            scanner.nextLine();
 
             switch (opcion) {
                 case 1:
@@ -43,7 +41,7 @@ public class App {
                         ArrayList<String> referencias = new ArrayList<>();
 
                         // Recuperar el mensaje y registrar las referencias
-                        img.recuperar(mensajeRecuperado, longitud, referencias);
+                        img.recuperar(mensajeRecuperado, longitud, tamanioPagina, referencias);
 
                         System.out.println("Mensaje recuperado: " + new String(mensajeRecuperado));
 
@@ -69,16 +67,16 @@ public class App {
                             }
 
                             System.out.println("Archivo de referencias generado exitosamente.");
-                        // } catch (IOException e) {
-                        //     System.out.println("Error al escribir el archivo de referencias: " + e.getMessage());
+                        } catch (IOException e) {
+                            System.out.println("Error al escribir el archivo de referencias: " + e.getMessage());
                         }
-                        } catch (ArithmeticException e) {
+                    } catch (ArithmeticException e) {
                         System.out.println("Error al procesar la imagen: " + e.getMessage());
                     }
                     break;
 
                 case 2:
-                    System.out.print("Ingrese el numero de marcos de página: ");
+                    System.out.print("Ingrese el número de marcos de página: ");
                     int numMarcosPaginaStr = scanner.nextInt();
 
                     System.out.print("Ingrese el nombre del archivo de referencias: ");
@@ -87,13 +85,11 @@ public class App {
                     break;
 
                 default:
-                    System.out.println("Opción no válida. Por favor, seleccione una opción valida");
+                    System.out.println("Opción no válida. Por favor, seleccione una opción válida");
             }
 
-        } while (opcion != 3); 
+        } while (opcion != 3);
 
         scanner.close();
     }
-
-
 }

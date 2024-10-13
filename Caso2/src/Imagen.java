@@ -2,6 +2,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 
 public class Imagen {
     byte[] header = new byte[54];
@@ -175,8 +176,8 @@ public class Imagen {
             // ancho es el número de pixeles en una fila
             // ancho*3 es el número de bytes en una fila
             int col = (i % (ancho * 3)) / 3;
-            longitud = longitud | (imagen[0][col][((i % (ancho * 3)) % 3)] & 1) << i;
-
+            int color = (i % (ancho * 3)) % 3;
+            longitud = longitud | ((imagen[0][col][color] & 1) << i);
         }
         return longitud;
     }
@@ -194,23 +195,32 @@ public class Imagen {
      * @pos cadena contiene el mensaje escondido en la imagen
      */
 
-    public void recuperar(char[] cadena, int longitud, ArrayList<String> referencias) { 
-        int bytesFila = ancho * 3; 
-        for (int posCaracter = 0; posCaracter < longitud; posCaracter++) { 
-            cadena[posCaracter] = 0;            
-            for (int i = 0; i < 8; i++) { 
-                int numBytes = 16 + (posCaracter * 8) + i; 
-                int fila = numBytes / bytesFila; 
-                int col = (numBytes % bytesFila) / 3; 
+    public void recuperar(char[] cadena, int longitud, int tamanioPagina, ArrayList<String> referencias) {
+        int bytesFila = ancho * 3;
+
+        for (int posCaracter = 0; posCaracter < longitud; posCaracter++) {
+            cadena[posCaracter] = 0;
+            for (int i = 0; i < 8; i++) {
+                int numBytes = 16 + (posCaracter * 8) + i;
+                int fila = numBytes / bytesFila;
+                int col = (numBytes % bytesFila) / 3;
                 int color = (numBytes % bytesFila) % 3;
 
-                // Agregar referencia
-                referencias.add("Imagen[" + fila + "][" + col + "][" + color + "]");
-
-                // Recuperar el bit y añadirlo al carácter
                 cadena[posCaracter] = (char) (cadena[posCaracter] | ((imagen[fila][col][color] & 1) << i));
-            }    
-        } 
+
+
+                String componente = (color == 0) ? "B" : (color == 1) ? "G" : "R";
+                int paginaVirtual = (fila * ancho * 3 + col * 3 + color) / tamanioPagina;
+                int desplazamiento = (fila * ancho * 3 + col * 3 + color) % tamanioPagina;
+                String referenciaImagen = "Imagen[" + fila + "][" + col + "]." + componente + "," + paginaVirtual + "," + desplazamiento + ",R";
+                referencias.add(referenciaImagen);
+
+                int paginaVirtualMensaje = (posCaracter * 8 + i) / tamanioPagina;
+                int desplazamientoMensaje = (posCaracter * 8 + i) % tamanioPagina;
+                String referenciaMensaje = "Mensaje[" + posCaracter + "]," + paginaVirtualMensaje + "," + desplazamientoMensaje + ",W";
+                referencias.add(referenciaMensaje);
+            }
+        }
     }
 
     public byte[] getHeader() {
