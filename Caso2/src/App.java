@@ -128,7 +128,6 @@ public class App {
                         System.out.println("Archivo de referencias no encontrado: " + e.getMessage());
                     }
                     Memoria memoria = new Memoria(P,NP,numMarcosPagina);
-                    int a=1;
                     
                     ActualizadorPaginas actualizador = new ActualizadorPaginas(memoria, referencias);
                     AlgoritmoNRU algoritmoNRU = new AlgoritmoNRU(memoria);
