@@ -41,38 +41,20 @@ public class App {
                         ArrayList<String> referencias = new ArrayList<>();
 
                         // Recuperar el mensaje y registrar las referencias
-                        img.recuperar(mensajeRecuperado, longitud, tamanioPagina, referencias);
+                        char[] mensajeFinal = img.recuperar(mensajeRecuperado, longitud, tamanioPagina);
 
-                        System.out.println("Mensaje recuperado: " + new String(mensajeRecuperado));
+                        System.out.println("Mensaje recuperado: " + new String(mensajeFinal));
 
                         // Escribir el archivo de referencias
                         String archivoReferencias = "../archivos/referencias.txt";
-                        try (FileWriter fw = new FileWriter(archivoReferencias)) {
-                            // Escribir datos generales
-                            fw.write("TP: " + tamanioPagina + "\n");
-                            fw.write("NF: " + img.getAlto() + "\n");
-                            fw.write("NC: " + img.getAncho() + "\n");
-                            fw.write("NR: " + referencias.size() + "\n");
-
-                            // Calcular el número de páginas necesarias
-                            int numPaginasImagen = (img.getAlto() * img.getAncho() * 3 + tamanioPagina - 1) / tamanioPagina;
-                            int numPaginasMensaje = (longitud * 8 + tamanioPagina - 1) / tamanioPagina;
-                            int numPaginasTotales = numPaginasImagen + numPaginasMensaje;
-
-                            fw.write("NP: " + numPaginasTotales + "\n");
-
-                            // Escribir las referencias
-                            for (String referencia : referencias) {
-                                fw.write(referencia + "\n");
-                            }
-
-                            System.out.println("Archivo de referencias generado exitosamente.");
-                        } catch (IOException e) {
-                            System.out.println("Error al escribir el archivo de referencias: " + e.getMessage());
+                        img.guardarReferencias(archivoReferencias);
+                        System.out.println(Imagen.contador);
+                        
+                        } 
+                        catch (ArithmeticException e) {
+                            System.out.println("Error al procesar la imagen: " + e.getMessage());
                         }
-                    } catch (ArithmeticException e) {
-                        System.out.println("Error al procesar la imagen: " + e.getMessage());
-                    }
+                    
                     break;
 
                 case 2:

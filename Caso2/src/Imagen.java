@@ -10,6 +10,8 @@ public class Imagen {
     int alto, ancho; // en pixeles
     int padding;
     String nombre;
+    private ArrayList<String> referencias = new ArrayList<String>();
+    static int contador =0;
 
     /***
      * Método para crear una matriz imagen a partir de un archivo.
@@ -195,34 +197,84 @@ public class Imagen {
      * @pos cadena contiene el mensaje escondido en la imagen
      */
 
-    public void recuperar(char[] cadena, int longitud, int tamanioPagina, ArrayList<String> referencias) {
+     public char[] recuperar(char[] cadena, int longitud, int tamanioPagina) {
         int bytesFila = ancho * 3;
-
+        int totalBytesImagen = alto * bytesFila;
+        int totalBitsMensaje = longitud * 8 + 16; //mensaje en bits + 16 bits de longitud del mensaje
+        int totalBytesMensaje = (totalBitsMensaje + 7) / 8;
+        int totalBytesMemoria = totalBytesImagen + totalBytesMensaje;
+    
+        int paginasOcupadasPorImagen = (totalBytesImagen + tamanioPagina - 1) / tamanioPagina;
+        int totalPaginas = (totalBytesMemoria + tamanioPagina - 1) / tamanioPagina;
+    
+        referencias.add("P=" + tamanioPagina);
+        referencias.add("NF=" + alto);
+        referencias.add("NC=" + ancho);
+        referencias.add("NR=" + totalBytesMemoria);
+        referencias.add("NP=" + totalPaginas);
+    
+        
+        for (int i = 0; i < 16; i++) {
+            int fila = i / bytesFila;
+            int col = (i % bytesFila) / 3;
+            int color = (i % bytesFila) % 3;
+            String componente = (color == 0) ? "B" : (color == 1) ? "G" : "R";
+            int direccionByte = fila * bytesFila + col * 3 + color;
+            int paginaVirtual = direccionByte / tamanioPagina;
+            int desplazamiento = direccionByte % tamanioPagina;
+    
+          
+            String referenciaImagen = "Imagen[" + fila + "][" + col + "]." + componente + "," + paginaVirtual + "," + desplazamiento + ",R";
+            referencias.add(referenciaImagen);
+        }
+    
+        // Recuperar el mensaje 
         for (int posCaracter = 0; posCaracter < longitud; posCaracter++) {
             cadena[posCaracter] = 0;
             for (int i = 0; i < 8; i++) {
-                int numBytes = 16 + (posCaracter * 8) + i;
+                int numBytes = 16 + (posCaracter * 8) + i; //16 bits para la longitud inicial + bits del mensaje
                 int fila = numBytes / bytesFila;
                 int col = (numBytes % bytesFila) / 3;
                 int color = (numBytes % bytesFila) % 3;
-
-                cadena[posCaracter] = (char) (cadena[posCaracter] | ((imagen[fila][col][color] & 1) << i));
-
-
                 String componente = (color == 0) ? "B" : (color == 1) ? "G" : "R";
-                int paginaVirtual = (fila * ancho * 3 + col * 3 + color) / tamanioPagina;
-                int desplazamiento = (fila * ancho * 3 + col * 3 + color) % tamanioPagina;
+    
+                int direccionByte = fila * bytesFila + col * 3 + color;
+                int paginaVirtual = direccionByte / tamanioPagina;
+                int desplazamiento = direccionByte % tamanioPagina;
+                
                 String referenciaImagen = "Imagen[" + fila + "][" + col + "]." + componente + "," + paginaVirtual + "," + desplazamiento + ",R";
                 referencias.add(referenciaImagen);
-
-                int paginaVirtualMensaje = (posCaracter * 8 + i) / tamanioPagina;
-                int desplazamientoMensaje = (posCaracter * 8 + i) % tamanioPagina;
+    
+                cadena[posCaracter] = (char) (cadena[posCaracter] | ((imagen[fila][col][color] & 1) << i));
+    
+                int direccionBitMensaje = (posCaracter * 8) + i;
+                int paginaVirtualMensaje = paginasOcupadasPorImagen + ((direccionBitMensaje + tamanioPagina - 1) / tamanioPagina);
+                int desplazamientoMensaje = direccionBitMensaje % tamanioPagina;
+    
+                
                 String referenciaMensaje = "Mensaje[" + posCaracter + "]," + paginaVirtualMensaje + "," + desplazamientoMensaje + ",W";
                 referencias.add(referenciaMensaje);
             }
         }
+        return (cadena);
     }
-
+    
+    
+    
+    
+    
+    
+        public void guardarReferencias(String rutaArchivo) {
+            try (FileWriter fw = new FileWriter(rutaArchivo)) {
+                for (String referencia : referencias) {
+                    fw.write(referencia + "\n");
+                }
+                System.out.println("Archivo de referencias generado exitosamente.");
+            } catch (IOException e) {
+                System.out.println("Error al escribir el archivo de referencias: " + e.getMessage());
+            }
+        }
+        // fin de la clase
     public byte[] getHeader() {
         return header;
     }
