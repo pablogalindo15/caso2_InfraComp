@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,11 +61,85 @@ public class App {
 
                 case 2:
                     System.out.print("Ingrese el número de marcos de página: ");
-                    int numMarcosPaginaStr = scanner.nextInt();
+                    int numMarcosPagina = scanner.nextInt();
+                    scanner.nextLine();
 
                     System.out.print("Ingrese el nombre del archivo de referencias: ");
                     String nombreArchivoReferencias = scanner.nextLine();
+                    String rutaArchivoReferencias = "Caso2/archivos/" + nombreArchivoReferencias;
+                     // Crear la memoria simulada
+                    // Memoria memoria = new Memoria(numMarcosPaginaStr);
+                    // AlgoritmoNRU algoritmoNRU = new AlgoritmoNRU(memoria);
+                    // algoritmoNRU.start();  // Iniciar el hilo para el NRU
 
+                    // Leer el archivo de referencias
+                    // Memoria memoria=null;
+                    ArrayList<String> referencias = new ArrayList<>();
+                    int P=0;
+                    int NF=0;
+                    int NC=0;
+                    int NR=0;
+                    int NP=0;
+                    boolean cargarMem=false;
+                    int contador=0;
+                    try (Scanner fileScanner = new Scanner(new File(rutaArchivoReferencias))) {
+                        while (fileScanner.hasNextLine()) {
+                            String linea = fileScanner.nextLine();
+                            contador++;
+                            // if (cargarMem) {
+                            //     memoria = new Memoria(P,NP,numMarcosPagina);
+                            //     cargarMem=false;                                
+                            // }
+
+                            // Verificar si la línea contiene una referencia (imagen o mensaje)
+                            if (linea.startsWith("Imagen") || linea.startsWith("Mensaje")) {
+
+                                referencias.add(linea);
+
+                            }else{
+                                String[] partes = linea.split("=");
+                                switch (partes[0]) {
+                                    case "P":
+                                        P = Integer.parseInt(partes[1]);
+                                        break;
+                                    case "NF":
+                                        NF = Integer.parseInt(partes[1]);
+                                        break;
+                                    case "NC":
+                                        NC = Integer.parseInt(partes[1]);
+                                        break;
+                                    case "NR":
+                                        NR = Integer.parseInt(partes[1]);
+                                        break;
+                                    case "NP":
+                                        NP = Integer.parseInt(partes[1]);
+                                        cargarMem=true;
+                                        break;
+                                    default:
+                                        System.out.println("Metadato no reconocido: " + partes[0]);
+                                }
+                            }
+                            // Simular el acceso a la memoria
+                            //Pagina pagina = new Pagina(paginaId);
+                            //memoria.accesoPagina(pagina, esEscritura);
+                        }
+
+                    } catch (FileNotFoundException e) {
+                        System.out.println("Archivo de referencias no encontrado: " + e.getMessage());
+                    }
+                    Memoria memoria = new Memoria(P,NP,numMarcosPagina);
+                    int a=1;
+                    
+                    ActualizadorPaginas actualizador = new ActualizadorPaginas(memoria, referencias);
+                    AlgoritmoNRU algoritmoNRU = new AlgoritmoNRU(memoria);
+
+                    actualizador.start();
+                    algoritmoNRU.start();
+
+                    // Esperar a que ambos threads terminen
+                    actualizador.join();
+                    algoritmoNRU.join();
+                    System.out.println("Fallos de página: " + memoria.getFallosDePagina());
                     break;
 
                 default:
