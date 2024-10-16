@@ -39,18 +39,19 @@ public class App {
                         int longitud = img.leerLongitud();
                         System.out.println("Longitud del mensaje: " + longitud);
 
+
                         char[] mensajeRecuperado = new char[longitud];
-                        ArrayList<String> referencias = new ArrayList<>();
+                        
 
                         // Recuperar el mensaje y registrar las referencias
-                        char[] mensajeFinal = img.recuperar(mensajeRecuperado, longitud, tamanioPagina);
+                        img.recuperar(mensajeRecuperado, longitud, tamanioPagina);
 
-                        System.out.println("Mensaje recuperado: " + new String(mensajeFinal));
+                        System.out.println("Mensaje recuperado: " + new String(mensajeRecuperado));
+                        System.out.println("Fin mensaje");
 
-                        // Escribir el archivo de referencias
+                        // // Escribir el archivo de referencias
                         String archivoReferencias = "../archivos/referencias.txt";
                         img.guardarReferencias(archivoReferencias);
-                        System.out.println(Imagen.contador);
                         
                         } 
                         catch (ArithmeticException e) {
