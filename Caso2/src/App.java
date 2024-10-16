@@ -127,7 +127,7 @@ public class App {
                     } catch (FileNotFoundException e) {
                         System.out.println("Archivo de referencias no encontrado: " + e.getMessage());
                     }
-                    Memoria memoria = new Memoria(P,NP,numMarcosPagina);
+                    Memoria memoria = new Memoria(P,NP+1,numMarcosPagina);
                     
                     ActualizadorPaginas actualizador = new ActualizadorPaginas(memoria, referencias);
                     AlgoritmoNRU algoritmoNRU = new AlgoritmoNRU(memoria);
@@ -138,7 +138,14 @@ public class App {
                     // Esperar a que ambos threads terminen
                     actualizador.join();
                     algoritmoNRU.join();
+                    int hits=memoria.getHits();
+                    int accesos=memoria.getAccesos();
+                    double porcentajeAcceso = ((double) hits / accesos) * 100;
+                    String res = String.format("%.2f", porcentajeAcceso);  
                     System.out.println("Fallos de página: " + memoria.getFallosDePagina());
+                    System.out.println("Hits: " + hits);
+                    System.out.println("Accesos: " + accesos);
+                    System.out.println("Porcentaje de Accesos: " + res + "%"); ;
                     break;
 
                 default:
