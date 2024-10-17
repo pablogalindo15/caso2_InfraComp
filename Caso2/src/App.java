@@ -29,7 +29,7 @@ public class App {
 
                     System.out.print("Ingrese el nombre del archivo de la imagen: ");
                     String nombreImagen = scanner.nextLine();
-                    String ruta = "../archivos/" + nombreImagen;
+                    String ruta = "Caso2/archivos/" + nombreImagen;
 
                     try {
                         // Crear una instancia de la clase Imagen
@@ -50,7 +50,7 @@ public class App {
                         System.out.println("Fin mensaje");
 
                         // // Escribir el archivo de referencias
-                        String archivoReferencias = "../archivos/referencias.txt";
+                        String archivoReferencias = "Caso2/archivos/referencias.txt";
                         img.guardarReferencias(archivoReferencias);
                         
                         } 
@@ -113,7 +113,7 @@ public class App {
                                         NR = Integer.parseInt(partes[1]);
                                         break;
                                     case "NP":
-                                        NP = Integer.parseInt(partes[1]);
+                                        NP = (int) Double.parseDouble(partes[1]);
                                         cargarMem=true;
                                         break;
                                     default:
@@ -141,12 +141,12 @@ public class App {
                     algoritmoNRU.join();
                     int hits=memoria.getHits();
                     int accesos=memoria.getAccesos();
-                    double porcentajeAcceso = ((double) hits / accesos) * 100;
-                    String res = String.format("%.2f", porcentajeAcceso);  
+                    System.out.println("tamaño de página: " + P);
+                    System.out.println("Número de marcos de página: " + numMarcosPagina);
+                    System.out.println("Número de referencias: " + NR);
                     System.out.println("Fallos de página: " + memoria.getFallosDePagina());
                     System.out.println("Hits: " + hits);
                     System.out.println("Accesos: " + accesos);
-                    System.out.println("Porcentaje de Accesos: " + res + "%"); ;
                     break;
 
                 default:

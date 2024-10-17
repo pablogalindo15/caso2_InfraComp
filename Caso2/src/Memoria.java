@@ -43,72 +43,13 @@ public class Memoria {
     
             //cargarPaginaEnMemoriaFisica(paginaId, esEscritura);
             cargarPaginaEnMemoriaFisica2(paginaId, esEscritura);
+            //cargarPaginaEnMemoriaFisica3(paginaId, esEscritura);
         } else {
 
             this.hits++;
             // Marcar que fue referenciada
             marcarReferencia(paginaId, esEscritura);
         }
-    }
-
-    private synchronized void cargarPaginaEnMemoriaFisica(int paginaId, boolean esEscritura) {
-        // Buscar un marco libre en la memoria física
-        for (Map.Entry<Integer, Integer> marco : memoriaFisica.entrySet()) {
-            if (marco.getValue() == -1) {
-
-                memoriaFisica.put(marco.getKey(), paginaId);
-                tablaPaginas.put(paginaId, marco.getKey());
-                System.out.println("Página " + paginaId + " cargada en el marco de página " + marco.getKey());
-                //Marcar como referenciada
-                marcarReferencia(paginaId, esEscritura);
-                return;
-            }
-        }
-
-        int marcoReemplazar = -1;
-
-        //Elegir la pagina a reeeplazar así o de otra forma
-        //Siempre usa el marco 0 para hacer el reemplazo de la página
-        for (Map.Entry<Integer, Integer> marco : memoriaFisica.entrySet()) {
-            int paginaEnMemoria = marco.getValue();
-            Pagina pagina = memoriaVirtual.get(paginaEnMemoria);
-
-            // Clase 0: No referenciada, no modificada
-            if (!pagina.getBitReferencia() && !pagina.getBitModificacion()) {
-                marcoReemplazar = marco.getKey();
-                break;
-            }
-            //Clase 1 (No referenciada, modificada)
-            if (!pagina.getBitReferencia() && pagina.getBitModificacion()) {
-                marcoReemplazar = marco.getKey();
-                break;
-            }
-            // Clase 2 (Referenciada, no modificada)
-            if (pagina.getBitReferencia() && !pagina.getBitModificacion()) {
-                marcoReemplazar = marco.getKey();
-                break;
-            }
-            //Clase 3 (Referenciada, modificada)
-            if (pagina.getBitReferencia() && pagina.getBitModificacion()) {
-                marcoReemplazar = marco.getKey();
-                break;
-            }
-
-        }
-
-        if (marcoReemplazar != -1) {
-            int paginaReemplazada = memoriaFisica.get(marcoReemplazar);
-            System.out.println("Reemplazando página " + paginaReemplazada + " en el marco " + marcoReemplazar);
-
-            // Cargar la nueva página en ese marco
-            memoriaFisica.put(marcoReemplazar, paginaId);
-            tablaPaginas.put(paginaId, marcoReemplazar);
-            tablaPaginas.put(paginaReemplazada, -1);  // Marcar la página reemplazada como no cargada
-            //Marcar como referenciada
-            marcarReferencia(paginaId, esEscritura);
-            
-        }
-
     }
 
     private synchronized void cargarPaginaEnMemoriaFisica2(int paginaId, boolean esEscritura) {
@@ -177,6 +118,67 @@ public class Memoria {
         marcarReferencia(paginaId, esEscritura);
 
     }
+
+    private synchronized void cargarPaginaEnMemoriaFisica3(int paginaId, boolean esEscritura){
+        // Buscar un marco libre en la memoria física
+       for (Map.Entry<Integer, Integer> marco : memoriaFisica.entrySet()) {
+           if (marco.getValue() == -1) {
+
+               memoriaFisica.put(marco.getKey(), paginaId);
+               tablaPaginas.put(paginaId, marco.getKey());
+               System.out.println("Páginaaa " + paginaId + " cargada en el marco de página " + marco.getKey());
+               //Marcar como referenciada
+               marcarReferencia(paginaId, esEscritura);
+               return;
+           }
+       }
+
+       Map<Integer, List<Pagina>> clases;
+       clases = new HashMap<Integer, List<Pagina>>();
+       for(int i=0;i<4;i++){
+           clases.put(i, new ArrayList<Pagina>());
+       }
+
+
+       for(int i=0;i<4; i++){
+           for(Map.Entry<Integer, Integer> marco : memoriaFisica.entrySet()){
+               int paginaEnMemoria = marco.getValue();
+               Pagina pagina = memoriaVirtual.get(paginaEnMemoria);
+               // Clase 0: No referenciada, no modificada
+               if (!pagina.getBitReferencia() && !pagina.getBitModificacion() && i==0 && tablaPaginas.get(pagina.numeroPaginaVirtual) != -1) {
+                   clases.get(i).add(pagina);
+               }
+               // Clase 1: No referenciada, modificada
+               if (!pagina.getBitReferencia() && pagina.getBitModificacion() && i==1 && tablaPaginas.get(pagina.numeroPaginaVirtual) != -1) {
+                   clases.get(i).add(pagina);
+               }
+               // Clase 2: Referenciada, no modificada
+               if (pagina.getBitReferencia() && !pagina.getBitModificacion() && i==2 && tablaPaginas.get(pagina.numeroPaginaVirtual) != -1) {
+                   clases.get(i).add(pagina);
+               }
+               // Clase 3: Referenciada, modificada
+               if (pagina.getBitReferencia() && pagina.getBitModificacion() && i==3 && tablaPaginas.get(pagina.numeroPaginaVirtual) != -1) {
+                   clases.get(i).add(pagina);
+               }
+           }
+           if (clases.get(i).size() > 0) {
+               Pagina paginaReemplazo= clases.get(i).get(0);
+
+               int marcoReemplazar = tablaPaginas.get(paginaReemplazo.numeroPaginaVirtual);
+               int paginaReemplazada = memoriaFisica.get(marcoReemplazar);
+               System.out.println("Reemplazando página " + paginaReemplazada + " del marco " + marcoReemplazar+ " por la pagina "+paginaId);
+       
+               // Cargar la nueva página en ese marco
+               memoriaFisica.put(marcoReemplazar, paginaId);
+               tablaPaginas.put(paginaId, marcoReemplazar);
+               tablaPaginas.put(paginaReemplazada, -1);  // Marcar la página reemplazada como no cargada
+               //Marcar como referenciada
+               marcarReferencia(paginaId, esEscritura);
+               break;
+               
+           }
+       }
+   }
 
     public synchronized void marcarReferencia(int paginaId, boolean esEscritura) {
         Pagina pagina = memoriaVirtual.get(paginaId);
