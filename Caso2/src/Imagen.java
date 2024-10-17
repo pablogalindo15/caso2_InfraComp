@@ -218,43 +218,50 @@ public class Imagen {
     
             String referenciaImagen = "Imagen[" + fila + "][" + col + "]." + componenteColor + "," + paginaVirtual + "," + desplazamiento + ",R";
             referencias.add(referenciaImagen);
+            contadorR++;
         }
         int totalBytesImagen = alto * bytesFila;
         //ciclo que recorre los bytes necesarios hasta que se cumple la longitud del mensaje
         for (int posCaracter = 0; posCaracter < longitud; posCaracter++) {
             cadena[posCaracter] = 0;
-            for (int i = 0; i < 8; i++) {
+            int i = 0;
+            //calcula el numero del byte en que se esta haciendo la escrituta bytesImagen + 
+            int direccionByteMensaje = totalBytesImagen + (posCaracter);
+            int paginaVirtualEscritura = direccionByteMensaje / tamanioPagina;
+            int desplazamientoEscritura = direccionByteMensaje % tamanioPagina;
+
+            // Registrar la referencia de escritura del mensaje
+            String referenciaMensaje1 = "Mensaje1[" + posCaracter + "]," + paginaVirtualEscritura + "," + desplazamientoEscritura + ",W";
+            referencias.add(referenciaMensaje1);
+            contadorR++;
+
+            while (i < 8) {
                 //Salta los bytes que nos dicen la longitud del mensaje ewn caracteres
                 int numeroByte = 16 + (posCaracter * 8) + i;
-    
                 int fila = numeroByte / bytesFila;
                 int col = (numeroByte % bytesFila) / 3;
                 int color = (numeroByte % bytesFila) % 3;
 
-                 //calcula el numero del byte en que se esta haciendo la escrituta bytesImagen + 
-                 int direccionByteMensaje = totalBytesImagen + (posCaracter);
-                 int paginaVirtualEscritura = direccionByteMensaje / tamanioPagina;
-                 int desplazamientoEscritura = direccionByteMensaje % tamanioPagina;
-     
-                //  // Registrar la referencia de escritura del mensaje
-                 String referenciaMensaje = "Mensaje[" + posCaracter + "]," + paginaVirtualEscritura + "," + desplazamientoEscritura + ",W";
-                 referencias.add(referenciaMensaje);
-
-                  // Recuperar el bit del mensaje desde la imagen
-                cadena[posCaracter] = (char)(cadena[posCaracter] | ((imagen[fila][col][color] & 1) << i));
-    
-                // Cálculo de la dirección byte en la imagen (para lectura)
+                //lculo de la dirección byte en la imagen (para lectura)
                 int direccionByteLectura = fila * bytesFila + col * 3 + color;
                 int paginaVirtualLectura = direccionByteLectura / tamanioPagina;
                 int desplazamientoLectura = direccionByteLectura % tamanioPagina;
-    
-    
+
                 // Registrar la referencia de lectura de la imagen
                 String componenteColor = (color == 0) ? "R" : (color == 1) ? "G" : "B";
                 String referenciaImagen = "Imagen[" + fila + "][" + col + "]." + componenteColor + "," + paginaVirtualLectura + "," + desplazamientoLectura + ",R";
                 referencias.add(referenciaImagen);
+                contadorR++;
+     
+                // Registrar la referencia de escritura del mensaje
+                 String referenciaMensaje = "Mensaje[" + posCaracter + "]," + paginaVirtualEscritura + "," + desplazamientoEscritura + ",W";
+                 referencias.add(referenciaMensaje);
+                 contadorR++;
+
+                  // Recuperar el bit del mensaje desde la imagen
+                cadena[posCaracter] = (char)(cadena[posCaracter] | ((imagen[fila][col][color] & 1) << i));
+                i++;
     
-               
             }
         }
     
