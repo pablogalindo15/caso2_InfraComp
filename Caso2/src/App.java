@@ -15,7 +15,8 @@ public class App {
             System.out.println("Menú de opciones:");
             System.out.println("1. Generar referencias");
             System.out.println("2. Calcular datos buscados");
-            System.out.println("3. Salir");
+            System.out.println("3. Esconder mensaje en imagen");
+            System.out.println("4. Salir");
             System.out.print("Seleccione una opción: ");
             
             opcion = scanner.nextInt();
@@ -29,7 +30,7 @@ public class App {
 
                     System.out.print("Ingrese el nombre del archivo de la imagen: ");
                     String nombreImagen = scanner.nextLine();
-                    String ruta = "../archivos/" + nombreImagen;
+                    String ruta = "caso2/archivos/" + nombreImagen;
 
                     try {
                         // Crear una instancia de la clase Imagen
@@ -50,7 +51,7 @@ public class App {
                         System.out.println("Fin mensaje");
 
                         // // Escribir el archivo de referencias
-                        String archivoReferencias = "../archivos/referencias.txt";
+                        String archivoReferencias = "caso2/archivos/referencias.txt";
                         img.guardarReferencias(archivoReferencias);
                         
                         } 
@@ -113,7 +114,7 @@ public class App {
                                         NR = Integer.parseInt(partes[1]);
                                         break;
                                     case "NP":
-                                        NP = Integer.parseInt(partes[1]);
+                                        NP = (int) Double.parseDouble(partes[1]);
                                         cargarMem=true;
                                         break;
                                     default:
@@ -148,12 +149,52 @@ public class App {
                     System.out.println("Accesos: " + accesos);
                     System.out.println("Porcentaje de Accesos: " + res + "%"); ;
                     break;
+                
+                case 3:
+                System.out.print("Ingrese el tamaño de página (en bytes): ");
+                int tamanioPagina2 = scanner.nextInt();
+                scanner.nextLine();
+
+                System.out.print("Ingrese el nombre del archivo de la imagen con el mensaje: ");
+                String imagen = scanner.nextLine();
+                String ruta2 = "caso2/archivos/" + imagen;
+                try {
+                    // Crear una instancia de la clase Imagen
+                    Imagen img = new Imagen(ruta2);
+
+                    // Leer la longitud del mensaje
+                    int longitud = img.leerLongitud();
+                    System.out.println("Longitud del mensaje: " + longitud);
+
+                    char[] mensajeRecuperado = new char[longitud];
+                    ArrayList<String> referencias2 = new ArrayList<>();
+
+                    // Recuperar el mensaje y registrar las referencias
+                    img.recuperar(mensajeRecuperado, longitud, tamanioPagina2);
+                    int nuevoTamanio = 4648;
+                    char[] mensajeFinalReducido = new char[nuevoTamanio];
+
+                    // Copiar los primeros 4648 caracteres al nuevo arreglo
+                    System.arraycopy(mensajeRecuperado, 0, mensajeFinalReducido, 0, nuevoTamanio);
+
+                    Imagen img2 = new Imagen("caso2/archivos/caso2-parrots.bmp");
+                    img2.esconder(mensajeFinalReducido, mensajeFinalReducido.length);
+                    img2.escribirImagen("caso2/archivos/parrots_4648.bmp");
+
+                    System.out.println("Mensaje recuperado: " + new String(mensajeFinalReducido));
+                    System.out.println("Longitud mensaje reducido: " + mensajeFinalReducido.length);
+                    
+                    } 
+                    catch (ArithmeticException e) {
+                        System.out.println("Error al procesar la imagen: " + e.getMessage());
+                    }
+                    break;
 
                 default:
                     System.out.println("Opción no válida. Por favor, seleccione una opción válida");
             }
 
-        } while (opcion != 3);
+        } while (opcion != 4);
 
         scanner.close();
     }
