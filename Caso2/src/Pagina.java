@@ -6,8 +6,8 @@ public class Pagina {
  
     public Pagina(int numeroPaginaVirtual, int tamanio) {
         this.numeroPaginaVirtual = numeroPaginaVirtual;
-        this.bitReferencia = false;  // Al cargar en memoria, el bit de referencia es 1
-        this.bitModificacion = false; // Bit de modificación (si la página ha sido modificada)
+        this.bitReferencia = false;  
+        this.bitModificacion = false;
         this.tamanio = new Byte[tamanio];
 
     }
