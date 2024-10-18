@@ -13,9 +13,7 @@ public class Imagen {
     private ArrayList<String> primerasReferencias = new ArrayList<String>();
     private ArrayList<String> referencias = new ArrayList<String>();
     private ArrayList<String> referenciasFinales = new ArrayList<String>();
-
     static int contador = 0;
-
 
     /***
      * Método para crear una matriz imagen a partir de un archivo.
@@ -261,10 +259,8 @@ public class Imagen {
                   // Recuperar el bit del mensaje desde la imagen
                 cadena[posCaracter] = (char)(cadena[posCaracter] | ((imagen[fila][col][color] & 1) << i));
                 i++;
-    
             }
         }
-    
         // Llamada al método para calcular los valores finales
         primerosValores(tamanioPagina, longitud, contadorR);
     }
@@ -294,8 +290,6 @@ public class Imagen {
             primerasReferencias.add("NC=" + NC);
             primerasReferencias.add("NR=" + contadorR);
             primerasReferencias.add("NP=" + Math.ceil(totalBytes/tamanioPagina));
-
-
         }
         // fin de la clase
     public byte[] getHeader() {
@@ -321,14 +315,4 @@ public class Imagen {
     public String getNombre() {
         return nombre;
     }
-
-    // public static void main(String[] args) {
-    // Imagen img = new Imagen("src/caso2-parrots_mod.bmp");
-    // System.out.println(img.getNombre());
-    // System.out.println("Header:" + img.getHeader());
-    // System.out.println("Imagen:" + img.getImagen());
-    // System.out.println(img.getPadding());
-
-    // }
-
 }

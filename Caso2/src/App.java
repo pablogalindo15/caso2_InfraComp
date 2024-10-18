@@ -29,7 +29,10 @@ public class App {
 
                     System.out.print("Ingrese el nombre del archivo de la imagen: ");
                     String nombreImagen = scanner.nextLine();
-                    String ruta = "Caso2/archivos/" + nombreImagen;
+                    //Ruta archivo windows
+                    // String ruta = "../Caso2/archivos/" + nombreImagen;
+                    //Ruta archivo macOS
+                    String ruta = "../archivos/" + nombreImagen;
 
                     try {
                         // Crear una instancia de la clase Imagen
@@ -148,7 +151,10 @@ public class App {
                     System.out.println("Hits: " + hits);
                     System.out.println("Accesos: " + accesos);
                     break;
-
+                case 3: 
+                System.out.println("Se finalizó correctamente.");
+                scanner.close();
+                break;
                 default:
                     System.out.println("Opción no válida. Por favor, seleccione una opción válida");
             }
