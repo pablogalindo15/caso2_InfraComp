@@ -2,14 +2,11 @@ public class Pagina {
     int numeroPaginaVirtual;
     private boolean bitReferencia; //R se establece siempre que se hace referencia a la página (se lee o se escribe).
     private boolean bitModificacion; //M se establece cuando se escribe en la página (es decir, se modifica).
-    private Byte[] tamanio;
  
-    public Pagina(int numeroPaginaVirtual, int tamanio) {
+    public Pagina(int numeroPaginaVirtual) {
         this.numeroPaginaVirtual = numeroPaginaVirtual;
         this.bitReferencia = false;  // Al cargar en memoria, el bit de referencia es 1
         this.bitModificacion = false; // Bit de modificación (si la página ha sido modificada)
-        this.tamanio = new Byte[tamanio];
-
     }
 
     public void marcarComoModificada() {

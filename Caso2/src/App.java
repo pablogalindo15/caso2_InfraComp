@@ -30,7 +30,7 @@ public class App {
                     System.out.print("Ingrese el nombre del archivo de la imagen: ");
                     String nombreImagen = scanner.nextLine();
                     //Ruta archivo windows
-                    // String ruta = "/Caso2/archivos/" + nombreImagen;
+                    //String ruta = "Caso2/archivos/" + nombreImagen;
                     //Ruta archivo macOS
                     String ruta = "../archivos/" + nombreImagen;
 
@@ -54,7 +54,7 @@ public class App {
 
                         // // Escribir el archivo de referencias
                         //WINDOWS para acceder al archivo
-                        //String archivoReferencias = "/Caso2/archivos/referencias.txt";
+                        //String archivoReferencias = "Caso2/archivos/referencias.txt";
                         //MACOS para acceder al archivo
                         String archivoReferencias = "../archivos/referencias.txt";
                         img.guardarReferencias(archivoReferencias);
@@ -74,19 +74,13 @@ public class App {
                     System.out.print("Ingrese el nombre del archivo de referencias: ");
                     String nombreArchivoReferencias = scanner.nextLine();
                     //MACOS para acceder al archivo
-                    String rutaArchivoReferencias = "../archivos/" + nombreArchivoReferencias;
+                    //String rutaArchivoReferencias = "../archivos/" + nombreArchivoReferencias;
                     //WINDOWS para acceder al archivo
-                    //String rutaArchivoReferencias = "/Caso2/archivos/" + nombreArchivoReferencias;
+                    String rutaArchivoReferencias = "Caso2/archivos/" + nombreArchivoReferencias;
                     
                     
                     
-                    // Crear la memoria simulada
-                    // Memoria memoria = new Memoria(numMarcosPaginaStr);
-                    // AlgoritmoNRU algoritmoNRU = new AlgoritmoNRU(memoria);
-                    // algoritmoNRU.start();  // Iniciar el hilo para el NRU
 
-                    // Leer el archivo de referencias
-                    // Memoria memoria=null;
                     ArrayList<String> referencias = new ArrayList<>();
                     int P=0;
                     int NF=0;
@@ -94,17 +88,10 @@ public class App {
                     int NR=0;
                     int NP=0;
                     boolean cargarMem=false;
-                    int contador=0;
                     try (Scanner fileScanner = new Scanner(new File(rutaArchivoReferencias))) {
                         while (fileScanner.hasNextLine()) {
                             String linea = fileScanner.nextLine();
-                            contador++;
-                            // if (cargarMem) {
-                            //     memoria = new Memoria(P,NP,numMarcosPagina);
-                            //     cargarMem=false;                                
-                            // }
 
-                            // Verificar si la línea contiene una referencia (imagen o mensaje)
                             if (linea.startsWith("Imagen") || linea.startsWith("Mensaje")) {
 
                                 referencias.add(linea);
@@ -132,9 +119,6 @@ public class App {
                                         System.out.println("Metadato no reconocido: " + partes[0]);
                                 }
                             }
-                            // Simular el acceso a la memoria
-                            //Pagina pagina = new Pagina(paginaId);
-                            //memoria.accesoPagina(pagina, esEscritura);
                         }
 
                     } catch (FileNotFoundException e) {
@@ -152,13 +136,11 @@ public class App {
                     actualizador.join();
                     algoritmoNRU.join();
                     int hits=memoria.getHits();
-                    int accesos=memoria.getAccesos();
                     System.out.println("tamaño de página: " + P);
                     System.out.println("Número de marcos de página: " + numMarcosPagina);
                     System.out.println("Número de referencias: " + NR);
                     System.out.println("Fallos de página: " + memoria.getFallosDePagina());
                     System.out.println("Hits: " + hits);
-                    System.out.println("Accesos: " + accesos);
                     break;
                 case 3: 
                 System.out.println("Se finalizó correctamente.");
