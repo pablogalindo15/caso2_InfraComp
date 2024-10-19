@@ -59,7 +59,6 @@ public class Memoria {
 
                 memoriaFisica.put(marco.getKey(), paginaId);
                 tablaPaginas.put(paginaId, marco.getKey());
-                System.out.println("Página " + paginaId + " cargada en el marco de página " + marco.getKey());
                 //Marcar como referenciada
                 marcarReferencia(paginaId, esEscritura);
                 return;
@@ -107,7 +106,7 @@ public class Memoria {
     
         // Reemplazar la página
         int paginaReemplazada = memoriaFisica.get(marcoReemplazar);
-        System.out.println("Reemplazando página " + paginaReemplazada + " en el marco " + marcoReemplazar);
+        //System.out.println("Reemplazando página " + paginaReemplazada + " en el marco " + marcoReemplazar);
     
         // Cargar la nueva página en ese marco
         memoriaFisica.put(marcoReemplazar, paginaId);
@@ -166,7 +165,7 @@ public class Memoria {
 
                int marcoReemplazar = tablaPaginas.get(paginaReemplazo.numeroPaginaVirtual);
                int paginaReemplazada = memoriaFisica.get(marcoReemplazar);
-               System.out.println("Reemplazando página " + paginaReemplazada + " del marco " + marcoReemplazar+ " por la pagina "+paginaId);
+               //System.out.println("Reemplazando página " + paginaReemplazada + " del marco " + marcoReemplazar+ " por la pagina "+paginaId);
        
                // Cargar la nueva página en ese marco
                memoriaFisica.put(marcoReemplazar, paginaId);
