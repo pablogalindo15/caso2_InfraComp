@@ -30,7 +30,7 @@ public class App {
                     System.out.print("Ingrese el nombre del archivo de la imagen: ");
                     String nombreImagen = scanner.nextLine();
                     //Ruta archivo windows
-                    // String ruta = "../Caso2/archivos/" + nombreImagen;
+                    // String ruta = "/Caso2/archivos/" + nombreImagen;
                     //Ruta archivo macOS
                     String ruta = "../archivos/" + nombreImagen;
 
@@ -53,7 +53,10 @@ public class App {
                         System.out.println("Fin mensaje");
 
                         // // Escribir el archivo de referencias
-                        String archivoReferencias = "Caso2/archivos/referencias.txt";
+                        //WINDOWS para acceder al archivo
+                        //String archivoReferencias = "/Caso2/archivos/referencias.txt";
+                        //MACOS para acceder al archivo
+                        String archivoReferencias = "../archivos/referencias.txt";
                         img.guardarReferencias(archivoReferencias);
                         
                         } 
@@ -70,8 +73,14 @@ public class App {
 
                     System.out.print("Ingrese el nombre del archivo de referencias: ");
                     String nombreArchivoReferencias = scanner.nextLine();
-                    String rutaArchivoReferencias = "Caso2/archivos/" + nombreArchivoReferencias;
-                     // Crear la memoria simulada
+                    //MACOS para acceder al archivo
+                    String rutaArchivoReferencias = "../archivos/" + nombreArchivoReferencias;
+                    //WINDOWS para acceder al archivo
+                    //String rutaArchivoReferencias = "/Caso2/archivos/" + nombreArchivoReferencias;
+                    
+                    
+                    
+                    // Crear la memoria simulada
                     // Memoria memoria = new Memoria(numMarcosPaginaStr);
                     // AlgoritmoNRU algoritmoNRU = new AlgoritmoNRU(memoria);
                     // algoritmoNRU.start();  // Iniciar el hilo para el NRU
