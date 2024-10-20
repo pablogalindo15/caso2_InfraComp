@@ -30,9 +30,9 @@ public class App {
                     System.out.print("Ingrese el nombre del archivo de la imagen: ");
                     String nombreImagen = scanner.nextLine();
                     //Ruta archivo windows
-                    //String ruta = "Caso2/archivos/" + nombreImagen;
+                    String ruta = "Caso2/archivos/" + nombreImagen;
                     //Ruta archivo macOS
-                    String ruta = "../archivos/" + nombreImagen;
+                    // String ruta = "../archivos/" + nombreImagen;
 
                     try {
                         // Crear una instancia de la clase Imagen
@@ -54,9 +54,9 @@ public class App {
 
                         // // Escribir el archivo de referencias
                         //WINDOWS para acceder al archivo
-                        //String archivoReferencias = "Caso2/archivos/referencias.txt";
+                        String archivoReferencias = "Caso2/archivos/referencias.txt";
                         //MACOS para acceder al archivo
-                        String archivoReferencias = "../archivos/referencias.txt";
+                        // String archivoReferencias = "../archivos/referencias.txt";
                         img.guardarReferencias(archivoReferencias);
                         
                         } 
